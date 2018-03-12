@@ -90,7 +90,6 @@ def post_search_filter(collectionid, pathStart, pathEnd, rowStart, rowEnd, dStar
 
 
 def image_ruku(namespace, key, content, ctype=None, overwrite="yes", **kwargs):
-    # htc = HtClient("127.0.0.1", 8065)
     htc = HtClient("10.0.138.151", 8065)
     dataid = key.lower()
     imgdata = content
@@ -184,18 +183,17 @@ def usgspage_parse(resp_content):
         print(db_metadata)
         metadata_insertDB_Landsat8(db_metadata)
 
-def area_landsat8_metadata_fetch(collectionid, dataArea=CHINA_AREA):
+def area_landsat8_metadata_fetch(collectionid, dStart, dataArea=CHINA_AREA):
     try:
         for area in dataArea:
             pathStart = area[0]
             pathEnd = area[0]
             rowStart = area[1]
             rowEnd  =area[1]
-            dStart = ""
+            # dStart = ""#"03/01/2018" 2018年3月1日
             dEnd = ""
 
             try:
-
                 print("metadata for path: %s and row: %s")%(pathStart, rowStart)
                 post_search_filter(collectionid, pathStart, pathEnd, rowStart, rowEnd, dStart, dEnd)
                 url = "https://earthexplorer.usgs.gov/result/index"
@@ -277,9 +275,10 @@ if __name__ == '__main__':
     # resp = myhttplib.urlopen(explorurl2, data=data, headers={})
     # sceneids = re.findall('data-entityId[\w\W]+?data-displayId', resp.read())
     # print(sceneids)
-    log_file = open("/mnt/win/tmp/landsat8_log.txt", 'w')
+    log_file = open("/tmp/landsat8_log.txt", 'w')
     dataCol = "landsat_8"
     collectionid = "12864"
+    dStart = "01/01/2018"  # "03/01/2018" 2018年3月1日
 
-    area_landsat8_metadata_fetch(collectionid, dataArea=CHINA_AREA)
+    area_landsat8_metadata_fetch(collectionid, dStart, dataArea=CHINA_AREA)
     log_file.close()
